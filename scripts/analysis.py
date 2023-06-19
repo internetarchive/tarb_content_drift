@@ -138,24 +138,31 @@ def analyze_links(main_page_text, links, anchor_texts, link_type, num_links_to_a
         print()
 
 
-def main():
-    url = "https://en.wikipedia.org/wiki/Python_(programming_language)"
-    main_page_content = fetch_wikipedia_page(url)
-    main_page_text = BeautifulSoup(main_page_content, "html.parser").get_text()
-    (
-        internal_links,
-        internal_anchor_texts,
-        external_links,
-        external_anchor_texts,
-    ) = extract_links_and_anchor_texts(main_page_content)
+def get_test_links():
+    with open("../tests/links.txt", "r") as file:
+        links = file.readlines()
+    return [link.strip() for link in links]
 
-    analyze_links(
-        main_page_text,
-        external_links,
-        external_anchor_texts,
-        "external",
-        num_links_to_analyze=5,
-    )
+
+def main():
+    test_links = get_test_links()
+    for url in test_links:
+        main_page_content = fetch_wikipedia_page(url)
+        main_page_text = BeautifulSoup(main_page_content, "html.parser").get_text()
+        (
+            internal_links,
+            internal_anchor_texts,
+            external_links,
+            external_anchor_texts,
+        ) = extract_links_and_anchor_texts(main_page_content)
+
+        analyze_links(
+            main_page_text,
+            external_links,
+            external_anchor_texts,
+            "external",
+            num_links_to_analyze=5,
+        )
 
 
 if __name__ == "__main__":
