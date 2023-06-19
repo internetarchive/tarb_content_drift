@@ -61,7 +61,8 @@ def cosine_similarity(vec1, vec2):
     return dot_product / (norm_vec1 * norm_vec2)
 
 
-def process_window(idx, words, anchor_text, window_size):
+def process_window(args):
+    idx, words, anchor_text, window_size = args
     window_content = " ".join(words[idx : idx + window_size])
     preprocessed_texts = [preprocess(anchor_text), preprocess(window_content)]
 
@@ -100,7 +101,6 @@ def find_closest_content_lda(main_page_text, anchor_text, window_size=100):
                     (idx, words, anchor_text, window_size)
                     for idx in range(len(words) - window_size + 1)
                 ],
-                chunksize=1,
             )
         )
 
@@ -174,7 +174,7 @@ def main():
             external_links,
             external_anchor_texts,
             "external",
-            num_links_to_analyze=5,
+            num_links_to_analyze=10,
         )
 
 

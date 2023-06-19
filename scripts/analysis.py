@@ -116,7 +116,9 @@ def analyze_links(main_page_text, links, anchor_texts, link_type, num_links_to_a
         dictionary = corpora.Dictionary(preprocessed_texts)
         corpus = [dictionary.doc2bow(text) for text in preprocessed_texts]
 
-        lda_model = models.LdaModel(corpus, num_topics=5, id2word=dictionary, passes=2)
+        lda_model = models.LdaModel(
+            corpus, num_topics=10, id2word=dictionary, passes=15
+        )
 
         main_page_topic_distribution = lda_model.get_document_topics(
             corpus[0], minimum_probability=0
@@ -161,7 +163,7 @@ def main():
             external_links,
             external_anchor_texts,
             "external",
-            num_links_to_analyze=5,
+            num_links_to_analyze=10,
         )
 
 
