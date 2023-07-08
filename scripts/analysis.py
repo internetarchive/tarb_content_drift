@@ -141,7 +141,7 @@ def analyze_links(main_page_text, links, anchor_texts, link_type, num_links_to_a
 
 
 def get_test_links():
-    with open("../tests/links.txt", "r") as file:
+    with open("tests/links.txt", "r") as file:
         links = file.readlines()
     return [link.strip() for link in links]
 
@@ -169,3 +169,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+    
