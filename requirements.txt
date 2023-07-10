@@ -5,3 +5,6 @@ nltk==3.6.2
 requests==2.26.0
 beautifulsoup4==4.9.3
 requests==2.31.0
+sentence-transformers==2.2.2
+streamlit==1.23.1
+
