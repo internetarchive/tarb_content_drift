@@ -7,8 +7,8 @@ A set of python scripts to analyze Wikipedia pages and calculate the relevancy s
 
 - `scripts/`: Contains the scripts which have BERT and LDA models that calculate various metrics of content relevancy.
 - `tests/`: Contains a file `test_links.txt` with a list of Wikipedia links to analyze.
-- `data\`: Contains the TSV files with anchor texts, sub headings and surrounding paragraphs.
-- `webui\`: Consists of a streamlit application that demonstrates how BERT calculates one of such relevancy metrics.
+- `data/`: Contains the TSV files with anchor texts, sub headings and surrounding paragraphs.
+- `webui/`: Consists of a streamlit application that demonstrates how BERT calculates one of such relevancy metrics.
 
 ## Usage
 
