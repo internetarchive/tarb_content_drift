@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request
-from logic import compute_bert_relevance, check_relevancy, generate_description
+from logic import compute_bert_relevance
 
 app = Flask(__name__)
 
@@ -9,35 +9,19 @@ def calculate_relevance():
     data = request.get_json()
     webpage = data.get("webpage")
     context_string = data.get("context_string")
-
     if webpage and context_string:
         try:
-            # Calculate Bert and LDA relevance
-            (
-                bert_relevance,
-                webpage_embedding,
-                string_embedding,
-                lda_relevance,
-            ) = compute_bert_relevance(webpage, context_string)
-
-            # Calculate GPT relevance and description
-            (gpt_relevance, description, reason) = check_relevancy(
+            relevance, webpage_embedding, string_embedding = compute_bert_relevance(
                 webpage, context_string
             )
-
             result = {
-                "bert_similarity": bert_relevance.tolist(),
-                "lda_similarity": 1 - lda_relevance.tolist(),
-                "gpt_similarity": gpt_relevance,
-                "description": description,
-                "reason": reason,
+                "relevance": relevance.tolist(),
             }
-
             return jsonify(result)
         except Exception as e:
-            return jsonify({"error": str(e)})
+            return jsonify({"error": str(e)}), 400
     else:
-        return jsonify({"error": "Please supply webpage and context_string"})
+        return jsonify({"error": "Please supply webpage and context_string"}), 400
 
 
 if __name__ == "__main__":
