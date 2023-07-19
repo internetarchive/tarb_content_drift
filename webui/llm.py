@@ -2,7 +2,7 @@ import openai
 import streamlit as st
 
 # Set up OpenAI API credentials
-openai.api_key = "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"
+openai.api_key = "enter_api_key"
 
 # Define the GPT-3.5 prompt
 prompt = """

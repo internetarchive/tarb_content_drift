@@ -21,7 +21,7 @@ nltk.download("stopwords", quiet=True)
 nltk.download("punkt", quiet=True)
 
 # Set your OpenAI API key
-os.environ["OPENAI_API_KEY"] = "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"
+os.environ["OPENAI_API_KEY"] = "enter_api_key"
 openai.api_key = os.environ["OPENAI_API_KEY"]
 
 
