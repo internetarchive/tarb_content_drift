@@ -108,6 +108,7 @@ def find_closest_content_lda(main_page_text, anchor_text, window_size=100):
 
 
 def analyze_links(main_page_text, links, anchor_texts, link_type, num_links_to_analyze):
+    results = []
     for idx, link in enumerate(links[:num_links_to_analyze]):
         anchor_text = anchor_texts[idx]
         closest_content, scoped_relevancy = find_closest_content_lda(
@@ -134,6 +135,16 @@ def analyze_links(main_page_text, links, anchor_texts, link_type, num_links_to_a
             [prob for _, prob in anchor_text_topic_distribution],
         )
 
+        result = {
+            "Link": link,
+            "Anchor text": anchor_text,
+            "Overall relevancy score": f"{overall_relevancy * 100:.2f}%",
+            "Scoped relevancy score": f"{scoped_relevancy * 100:.2f}%",
+            "Similar content": closest_content,
+        }
+        results.append(result)
+
+        # Also print all these to terminal
         print(f"Link: {link}")
         print(f"Anchor text: {anchor_text}")
         print(f"Overall relevancy score: {overall_relevancy * 100:.2f}%")
@@ -141,33 +152,39 @@ def analyze_links(main_page_text, links, anchor_texts, link_type, num_links_to_a
         print(f"Similar content: {closest_content}")
         print()
 
-
-def get_test_links():
-    with open("../tests/links.txt", "r") as file:
-        links = file.readlines()
-    return [link.strip() for link in links]
+    return results
 
 
-def main():
-    test_links = get_test_links()
-    for url in test_links:
-        main_page_content = fetch_wikipedia_page(url)
-        main_page_text = BeautifulSoup(main_page_content, "html.parser").get_text()
-        (
-            internal_links,
-            internal_anchor_texts,
-            external_links,
-            external_anchor_texts,
-        ) = extract_links_and_anchor_texts(main_page_content)
+def main(url):
+    main_page_content = fetch_wikipedia_page(url)
+    main_page_text = BeautifulSoup(main_page_content, "html.parser").get_text()
+    (
+        internal_links,
+        internal_anchor_texts,
+        external_links,
+        external_anchor_texts,
+    ) = extract_links_and_anchor_texts(main_page_content)
 
-        analyze_links(
-            main_page_text,
-            external_links,
-            external_anchor_texts,
-            "external",
-            num_links_to_analyze=10,
-        )
+    return analyze_links(
+        main_page_text,
+        external_links,
+        external_anchor_texts,
+        "external",
+        num_links_to_analyze=9,
+    )
 
 
-if __name__ == "__main__":
-    main()
+# The streamlit interface
+st.title("Wikipedia Page Analysis")
+st.write('Please enter a Wikipedia URL to analyze and click "Run Analysis"')
+
+url = st.text_input("Wikipedia URL")
+
+if st.button("Run Analysis"):
+    if url:
+        results = main(url)
+        st.write("Analysis complete! Results:")
+        for result in results[1:]:
+            st.write(result)
+    else:
+        st.warning("Please enter a URL")
