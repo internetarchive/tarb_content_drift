@@ -62,5 +62,5 @@ def combined_similarity(text1, text2):
     # Jaccard Similarity: Jaccard similarity depends on the intersection of words between the two texts. If the words are different but the meaning is the same, the Jaccard similarity may be low.
 
     # Adjust weights
-    weights = [0.4, 0.3, 0.3]
+    weights = [0.5, 0.3, 0.2]
     return np.dot([bert_similarity, tfidf_similarity, jaccard_similarity], weights)
