@@ -138,7 +138,6 @@ def analyze_links(main_page_text, links, anchor_texts, link_type, num_links_to_a
         result = {
             "Link": link,
             "Anchor text": anchor_text,
-            "Overall relevancy score": f"{overall_relevancy * 100:.2f}%",
             "Scoped relevancy score": f"{scoped_relevancy * 100:.2f}%",
             "Similar content": closest_content,
         }

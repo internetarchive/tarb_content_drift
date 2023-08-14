@@ -4,7 +4,7 @@ from bs4 import BeautifulSoup
 import streamlit as st
 
 # Set up OpenAI API credentials
-openai.api_key = "api-key"
+openai.api_key = "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"
 
 # Define the GPT-3.5 prompt
 prompt = """
