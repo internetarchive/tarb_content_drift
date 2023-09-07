@@ -15,6 +15,8 @@ The API exposes three main endpoints for calculating content relevancy:
 5. **LLM Relevance**: Uses the LLM model to determine content relevancy.
    `curl -XPOST -H "Content-type: application/json" -d '{"webpage": "https://example.com", "context_string": "your context string"}' 'localhost:5002/llm_relevance'`
 
+   ![CleanShot 2023-07-11 at 09 09 34@2x](https://github.com/internetarchive/tarb_gsoc23_content_drift/assets/63366288/4986a970-1096-498e-b542-30d03baa0138)
+
 ## Prerequisites
 
 - Docker (optional)
