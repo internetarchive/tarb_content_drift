@@ -1,17 +1,27 @@
 # tarb_gsoc23_content_drift
 
-Content drift assessment tool for TARB project.
-A set of python scripts to analyze Wikipedia pages and calculate the relevancy scores of embedded non-wikipedia links.
+## Overview
+
+This repository houses the Content Drift Assessment Tool developed for the TARB project at the Internet Archive. The tool comprises a collection of Python scripts designed to analyze Wikipedia pages and compute relevancy scores for embedded non-Wikipedia links using advanced NLP models like BERT and LDA.
 
 ## Directory Structure
 
-- `scripts/`: Contains the scripts which have BERT and LDA models that calculate various metrics of content relevancy.
-- `tests/`: Contains a file `test_links.txt` with a list of Wikipedia links to analyze.
-- `data/`: Contains the TSV files with anchor texts, sub headings and surrounding paragraphs.
-- `webui/`: Consists of a streamlit application that demonstrates how BERT calculates one of such relevancy metrics.
+- `scripts/`: This directory contains Python scripts that utilize BERT and LDA models to calculate various metrics related to content relevancy. These metrics are crucial for understanding how well the embedded links align with the content of the Wikipedia pages.
+  
+- `api/`: This directory hosts APIs that expose the various relevancy metrics calculated by the models. These APIs can be integrated into other systems or used for batch processing.
+  
+- `data/`: This directory contains TSV (Tab Separated Values) files that store anchor texts, sub-headings, and surrounding paragraphs for each analyzed Wikipedia page. These files serve as the data foundation for the relevancy calculations.
+  
+- `webui/`: This directory features a Streamlit application that provides a user-friendly interface to interact with the BERT model for calculating relevancy metrics. It serves as a demo to showcase the capabilities of the tool.
 
-## Usage
+## Prerequisites
 
-1. `pip install -r requirements.txt` to install the required libraries.
-2. Run the files in `scripts/` as required.
-3. Instructions for running the webUI are in a separate readme within the folder.
+- Python 3.x
+- pip
+
+## Installation and Usage
+
+1. Clone the repository to your local machine.
+`git clone https://github.com/internetarchive/tarb_gsoc23_content_drift.git`
+
+2. Instructions for the rest of the use cases are within the directories.
