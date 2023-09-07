@@ -2,9 +2,13 @@ import openai
 import requests
 from bs4 import BeautifulSoup
 import streamlit as st
+from flask import Flask, jsonify, request
 
 # Set up OpenAI API credentials
-openai.api_key = "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"
+openai.api_key = "openapi-key"
+
+app = Flask(__name__)
+
 
 # Define the GPT-3.5 prompt
 prompt = """
@@ -134,36 +138,24 @@ def check_relevancy(url, context):
     }
 
 
-# Streamlit app
-def main():
-    # Add heading
-    st.title("LLM Relevancy Metric")
-
-    # Get inputs from the user
-    url = st.text_input("Enter the URL:")
-    context = st.text_area("Enter the context:")
-
-    # Check relevancy when the user clicks a button
-    if st.button("Check Relevancy"):
-        # Call the check_relevancy function
-        result = check_relevancy(url, context)
-
-        # Display the relevancy percentage, description, and reason with different colors
-        st.markdown(
-            f"<h3><font color='orange'>Relevancy Percentage: <span style='font-size:30px'>{result['relevancy_percentage']}</span></font></h3>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f"<font color='lightblue'>**Description of URL:** {result['url_description']}</font>",
-            unsafe_allow_html=True,
-        )
-        st.markdown(
-            f"<font color='pink'>**Description of Context:** {result['context_description']}</font>",
-            unsafe_allow_html=True,
-        )
-        # st.markdown(f"<font color='green'>**Reason for Relevancy Percentage:** {result['reason']}</font>", unsafe_allow_html=True)
+app = Flask(__name__)
 
 
-# Run the Streamlit app
+@app.route("/llm_relevance", methods=["POST"])
+def calculate_llm_relevance():
+    data = request.get_json()
+    url = data.get("webpage")
+    context_string = data.get("context_string")
+
+    if url and context_string:
+        try:
+            result = check_relevancy(url, context_string)
+            return jsonify(result)
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
+    else:
+        return jsonify({"error": "Please supply webpage and context_string"}), 400
+
+
 if __name__ == "__main__":
-    main()
+    app.run(port=5002)
