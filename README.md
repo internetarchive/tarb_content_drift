@@ -22,3 +22,6 @@ This repository houses the Content Drift Assessment Tool developed for the TARB 
 ## Installation and Usage
 
 1. Clone the repository to your local machine.
+`git clone https://github.com/internetarchive/tarb_gsoc23_content_drift.git`
+
+2. Instructions for the rest of the use cases are within the directories.
