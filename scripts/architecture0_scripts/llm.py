@@ -10,7 +10,7 @@ df = pd.read_csv("../data/dataset_mini.tsv", sep="\t")
 
 
 # Set up OpenAI API credentials
-openai.api_key = "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"
+openai.api_key = "api-key"
 
 # Define the GPT-3.5 prompt
 prompt = """
