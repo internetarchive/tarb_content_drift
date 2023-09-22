@@ -64,22 +64,17 @@ def process_row(index, row):
     return index, row
 
 
-# Read the TSV file 
 df = pd.read_table("./test.tsv", header=None)
 
-# Assign column names
 df.columns = ["link", "wikipedia_page"]
 
-# Create new columns
 df["anchor_text"] = None
 df["page_heading"] = None
 df["surrounding_paragraph"] = None
 
-# Use ThreadPoolExecutor to process rows in parallel
 with concurrent.futures.ThreadPoolExecutor() as executor:
     for i in range(0, df.shape[0], 50):
         df_chunk = df.iloc[i : i + 50]
-        # update the df_chunk with the returned data from executor.map
         result_list = list(
             filter(
                 None,
@@ -92,23 +87,18 @@ with concurrent.futures.ThreadPoolExecutor() as executor:
             )
         )
 
-        # Drop processed rows from the main DataFrame
         processed_indices = [result[0] for result in result_list]
         df.drop(processed_indices, inplace=True)
         df.reset_index(drop=True, inplace=True)
 
-        # Write the remaining DataFrame back to the original TSV file
         df.to_csv("./test.tsv", sep="\t", index=False, header=False)
 
-        # Convert the remaining certain part of result_list, excluding the index
         df_chunk = pd.DataFrame(
             [result[1] for result in result_list], columns=df.columns
         )
 
-        # Drop rows with any missing values
         df_chunk.dropna(inplace=True)
 
-        # Check if file is empty before writing
         if i == 0:
             df_chunk.to_csv("output.tsv", sep="\t", index=False, mode="w", header=True)
         else:
@@ -124,18 +114,14 @@ if df.shape[0] % 50 != 0:
         )
     )
 
-    # Drop processed rows from the main DataFrame
     processed_indices = [result[0] for result in result_list]
     df.drop(processed_indices, inplace=True)
     df.reset_index(drop=True, inplace=True)
 
-    # Convert the remaining certain part of result_list, excluding the index
     df_chunk = pd.DataFrame([result[1] for result in result_list], columns=df.columns)
 
-    # Drop rows with any missing values
     df_chunk.dropna(inplace=True)
 
-    # Check if file is empty before writing
     if df.shape[0] // 50 == 0:
         df_chunk.to_csv("output.tsv", sep="\t", index=False, mode="w", header=True)
     else:

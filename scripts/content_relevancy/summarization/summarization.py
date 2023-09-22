@@ -1,10 +1,8 @@
 from transformers import BartTokenizer, BartForConditionalGeneration
 
 # Define summarizer models
-summarizer_model = BartForConditionalGeneration.from_pretrained(
-    "facebook/bart-large-cnn"
-)
-summarizer_tokenizer = BartTokenizer.from_pretrained("facebook/bart-large-cnn")
+summarizer_model = BartForConditionalGeneration.from_pretrained("facebook/bart-base")
+summarizer_tokenizer = BartTokenizer.from_pretrained("facebook/bart-base")
 
 
 # Summarize text
@@ -19,9 +17,9 @@ def summarize(texts):
             )
             summary_ids = summarizer_model.generate(
                 inputs.input_ids,
-                max_length=150,
-                min_length=50,
-                length_penalty=2.0,
+                max_length=400,
+                min_length=100,
+                length_penalty=2.5,
                 num_beams=4,
                 early_stopping=True,
             )

@@ -33,21 +33,37 @@ def get_embeddings(texts, tokenizer, model):
     return outputs.last_hidden_state.mean(dim=1)
 
 
-def bert_similarity(text1, text2):
-    embeds1 = get_embeddings([text1], tokenizer, model)
-    embeds2 = get_embeddings([text2], tokenizer, model)
-    return torch.nn.functional.cosine_similarity(embeds1, embeds2).item() * 100
-
-
 def combined_similarity(text1, text2):
-    embeds1 = get_combined_embeddings([text1])
-    embeds2 = get_combined_embeddings([text2])
+    # Get separate embeddings
+    embeds1_bert = get_embeddings([text1], tokenizer, model)
+    embeds2_bert = get_embeddings([text2], tokenizer, model)
+
+    embeds1_roberta = get_embeddings([text1], roberta_tokenizer, roberta_model)
+    embeds2_roberta = get_embeddings([text2], roberta_tokenizer, roberta_model)
+
+    embeds1_xlnet = get_embeddings([text1], xlnet_tokenizer, xlnet_model)
+    embeds2_xlnet = get_embeddings([text2], xlnet_tokenizer, xlnet_model)
+
+    # Calculate cosine similarity separately
     bert_similarity = (
-        torch.nn.functional.cosine_similarity(embeds1, embeds2).item() * 100
+        torch.nn.functional.cosine_similarity(embeds1_bert, embeds2_bert).item() * 100
+    )
+    roberta_similarity = (
+        torch.nn.functional.cosine_similarity(embeds1_roberta, embeds2_roberta).item()
+        * 100
+    )
+    xlnet_similarity = (
+        torch.nn.functional.cosine_similarity(embeds1_xlnet, embeds2_xlnet).item() * 100
     )
 
-    vectorizer = TfidfVectorizer()
+    weights = [0.5, 0.3, 0.2]  # Weights for BERT, RoBERTa, and XLNet respectively
+    combined_similarity_score = np.dot(
+        [bert_similarity, roberta_similarity, xlnet_similarity], weights
+    )
+
+    vectorizer = TfidfVectorizer(ngram_range=(1, 3))  # Using n-grams
     tfidf_matrix = vectorizer.fit_transform([text1, text2])
+
     tfidf_similarity = (
         cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])[0][0] * 100
     )
@@ -57,10 +73,10 @@ def combined_similarity(text1, text2):
         / len(set(text1.split()).union(set(text2.split())))
     ) * 100
 
-    # BERT Similarity: BERT captures deep semantic relationships between texts, which can lead to higher similarity scores when the texts are semantically similar even if the exact words differ.
-    # TF-IDF Similarity: This measure relies on term frequency and the inverse document frequency of words. If the texts have different words but the same meaning, the TF-IDF similarity may be low, reducing the overall combined similarity.
-    # Jaccard Similarity: Jaccard similarity depends on the intersection of words between the two texts. If the words are different but the meaning is the same, the Jaccard similarity may be low.
-
-    # Adjust weights
+    # Adjust weights to focus more on exact text rather than semantic similarity
     weights = [0.5, 0.3, 0.2]
-    return np.dot([bert_similarity, tfidf_similarity, jaccard_similarity], weights)
+
+    return np.dot(
+        [combined_similarity_score, tfidf_similarity, jaccard_similarity],
+        weights,
+    )
