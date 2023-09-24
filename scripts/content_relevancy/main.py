@@ -14,7 +14,7 @@ import pandas as pd
 
 # Load dataset
 print("Loading dataset...")
-df = pd.read_csv("./data/dataset_mini.tsv", sep="\t")
+df = pd.read_csv("./data/dataset.tsv", sep="\t")
 results = []
 
 print("Starting iteration over DataFrame rows...")
@@ -24,7 +24,7 @@ for i, row in tqdm(df.iterrows(), total=df.shape[0]):
     url = row["wikipedia_page"]
     anchor_text = row["anchor_text"]
     surrounding_paragraph = row["surrounding_paragraph"]
-
+    wikipedia_content = get_embedded_content(url)
     link_url = row["link"]
     link_content = get_embedded_content(link_url)
 
