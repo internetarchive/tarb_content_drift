@@ -14,7 +14,7 @@ import pandas as pd
 
 # Load dataset
 print("Loading dataset...")
-df = pd.read_csv("./data/dataset.tsv", sep="\t")
+df = pd.read_csv("./data/dataset_mini.tsv", sep="\t")
 results = []
 
 print("Starting iteration over DataFrame rows...")

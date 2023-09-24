@@ -18,13 +18,6 @@ roberta_model = RobertaModel.from_pretrained("roberta-base")
 xlnet_model = XLNetModel.from_pretrained("xlnet-base-cased")
 
 
-def get_combined_embeddings(texts):
-    bert_embeds = get_embeddings(texts, tokenizer, model)
-    roberta_embeds = get_embeddings(texts, roberta_tokenizer, roberta_model)
-    xlnet_embeds = get_embeddings(texts, xlnet_tokenizer, xlnet_model)
-    return torch.cat((bert_embeds, roberta_embeds, xlnet_embeds), dim=1)
-
-
 def get_embeddings(texts, tokenizer, model):
     inputs = tokenizer(
         texts, return_tensors="pt", max_length=512, truncation=True, padding=True
@@ -56,7 +49,7 @@ def combined_similarity(text1, text2):
         torch.nn.functional.cosine_similarity(embeds1_xlnet, embeds2_xlnet).item() * 100
     )
 
-    weights = [0.5, 0.3, 0.2]  # Weights for BERT, RoBERTa, and XLNet respectively
+    weights = [0.8, 0.1, 0.1]  # Weights for BERT, RoBERTa, and XLNet respectively
     combined_similarity_score = np.dot(
         [bert_similarity, roberta_similarity, xlnet_similarity], weights
     )
